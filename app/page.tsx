@@ -12,6 +12,8 @@ import { WishlistProvider } from './Components/WishlistContext'; // Ensure this 
 import CartComponent from './Components/CartComponent';
 import WishlistComponent from './Components/WishlistComponent'; // Ensure this import is present
 
+
+
 import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap
 import "../public/assets/css/all.min.css"; // FontAwesome
 import "../public/assets/css/owl.carousel.css"; // Owl Carousel
@@ -788,6 +790,29 @@ const products = [
               </div>
               {/* Logo */}
 
+              <div className="hero-area hero-bg">
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-9 offset-lg-2 text-center">
+            <div className="hero-text">
+              <div className="hero-text-tablecell">
+                <p className="subtitle">Fresh & Organic</p>
+                <h1>Delicious Seasonal Fruits</h1>
+                <div className="hero-btns">
+                  <Link href="/shop">
+                    <a className="boxed-btn">Fruit Collection</a>
+                  </Link>
+                  <Link href="/contact">
+                    <a className="bordered-btn">Contact Us</a>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
               {/* Menu */}
               <nav className="main-menu">
                 <ul>
@@ -890,6 +915,8 @@ const products = [
         </div>
       </div>
     </div>
+
+
 
 
       <CartProvider>
