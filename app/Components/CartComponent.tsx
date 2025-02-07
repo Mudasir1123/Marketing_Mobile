@@ -1,5 +1,5 @@
-// components/CartComponent.tsx
 
+// components/CartComponent.tsx
 import React from 'react';
 import { useCart } from './CartContext';
 

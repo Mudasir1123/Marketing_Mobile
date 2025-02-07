@@ -11,6 +11,7 @@ import '../public/assets/css/meanmenu.min.css';
 import '../public/assets/css/main.css';
 import '../public/assets/css/responsive.css';
 import '../public/assets/css/all.min.css';
+import { CartProvider } from "./Components/CartContext"; // ✅ Import CartProvider
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,10 +35,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <CartProvider> {/* ✅ Wrap children with CartProvider */}
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
