@@ -1,8 +1,7 @@
-"use client";
-
 import Link from 'next/link';
 import { Card, Button, Image } from 'react-bootstrap';
-import { useCart } from './CartContext'; // Import Cart Context
+import { useCart } from './CartContext';
+import { useWishlist } from './WishlistContext'; // ✅ Import Wishlist Context
 
 interface ProductCardProps {
   id: string;
@@ -23,7 +22,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   customWidth,
   customHeight,
 }) => {
-  const { addToCart } = useCart(); // Get addToCart function from context
+  const { addToCart } = useCart(); // ✅ Use cart context
+  const { addToWishlist } = useWishlist(); // ✅ Use wishlist context
 
   return (
     <Card style={{ width: '18rem' }} className="mb-4">
@@ -40,14 +40,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Card.Title>{name}</Card.Title>
         <Card.Text>${price}</Card.Text>
         <Card.Text>{stock > 0 ? 'In Stock' : 'Out of Stock'}</Card.Text>
-        <Button
-          variant="primary"
-          disabled={stock === 0}
-          onClick={() =>
-            addToCart({ id, name, price, image, stock, customWidth, customHeight })
-          }
-        >
+        <Button variant="primary" onClick={() => addToCart({ id, name, price, image, stock, customWidth, customHeight })} disabled={stock === 0}>
           Add to Cart
+        </Button>
+        <Button variant="outline-danger" className="ml-2" onClick={() => addToWishlist({ id, name, price, image, stock, customWidth, customHeight })}>
+          Add to Wishlist
         </Button>
       </Card.Body>
     </Card>
