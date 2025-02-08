@@ -1,17 +1,16 @@
-'use client'
-// context/CartContext.tsx
+"use client";
 
-import React, { createContext, useState, ReactNode, useContext } from 'react';
+import React, { createContext, useState, ReactNode, useContext, useEffect } from "react";
 
-// Define product type for the cart
+// Define product type
 type Product = {
   id: string;
   name: string;
   price: number;
   image: string;
   stock: number;
-  customWidth: number;
-  customHeight: number;
+  customWidth?: number;
+  customHeight?: number;
 };
 
 // Cart item type (with quantity)
@@ -32,7 +31,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider");
   }
   return context;
 };
@@ -43,6 +42,19 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  // ✅ Load cart from localStorage on mount
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setCartItems(JSON.parse(storedCart));
+    }
+  }, []);
+
+  // ✅ Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (product: Product) => {
     setCartItems((prev) => {
@@ -55,6 +67,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         return [...prev, { ...product, quantity: 1 }];
       }
     });
+
+    console.log("✅ Product added to cart:", product);
   };
 
   const removeFromCart = (id: string) => {

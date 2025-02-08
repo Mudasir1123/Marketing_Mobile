@@ -10,7 +10,7 @@ type Product = {
   category: string;
   tags?: string[]; // Optional tags field
   customWidth: number;
-  customHeight: number;
+  customHeight: number; 
 };
 
 interface SearchBarProps {
