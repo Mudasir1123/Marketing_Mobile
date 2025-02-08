@@ -34,7 +34,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     };
 
     updateProducts(); // Initial shuffle
-    const interval = setInterval(updateProducts, 30000); // Update every 30 seconds
+    const interval = setInterval(updateProducts, 10000); // Update every 30 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, [products]);
