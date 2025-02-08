@@ -7,6 +7,7 @@ import { useCart } from "../../Components/CartContext";
 import { useWishlist } from "../../Components/WishlistContext";
 import products from "../../Components/data";
 import Swal from "sweetalert2";
+import Link from "next/link";
 
 // Define Product interface
 interface Product {
@@ -33,11 +34,19 @@ const ProductDetail = () => {
   const addToWishlist = wishlistContext?.addToWishlist || (() => {});
 
   const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const foundProduct = products.find((p) => p.id === id);
     setProduct(foundProduct || null);
+
+    if (foundProduct) {
+      // Exclude the current product and shuffle
+      const filteredProducts = products.filter((p) => p.id !== id);
+      const shuffledProducts = filteredProducts.sort(() => 0.5 - Math.random());
+      setRelatedProducts(shuffledProducts.slice(0, 4)); // Pick 4 random related products
+    }
   }, [id]);
 
   const isAlreadyInCart = cart.some((item) => item.id === id);
@@ -55,24 +64,20 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-
     if (isAlreadyInCart) {
       showAlert("Already in Cart!", `"${product.name}" is already in your cart.`, "warning");
       return;
     }
-
     addToCart({ ...product, quantity });
     showAlert("Added to Cart!", `"${product.name}" has been added to your cart.`, "success");
   };
 
   const handleAddToWishlist = () => {
     if (!product) return;
-
     if (isAlreadyInWishlist) {
       showAlert("Already in Wishlist!", `"${product.name}" is already in your wishlist.`, "warning");
       return;
     }
-
     addToWishlist(product);
     showAlert("Added to Wishlist!", `"${product.name}" has been added to your wishlist.`, "success");
   };
@@ -98,9 +103,7 @@ const ProductDetail = () => {
         <div>
           <h1 className="text-3xl font-bold">{product.name}</h1>
           <p className="mt-2 text-gray-600">{product.description}</p>
-          <p className="text-lg font-bold text-gray-800 mt-2">
-  Rs: {product.price}
-</p>
+          <p className="text-lg font-bold text-gray-800 mt-2">Rs: {product.price}</p>
           <p className={product.stock > 0 ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
             {product.stock > 0 ? "In Stock" : "Out of Stock"}
           </p>
@@ -132,22 +135,40 @@ const ProductDetail = () => {
               {isAlreadyInWishlist ? "Already in Wishlist" : "Add to Wishlist"}
             </button>
           </div>
-
-          <ul className="mt-5 text-gray-700">
-            <li><b>Stock:</b> <span>{product.stock}</span></li>
-            <li><b>Shipping:</b> <span>01 day shipping. <span className="text-green-500">Free pickup today</span></span></li>
-            <li><b>Weight:</b> <span>0.5 kg</span></li>
-            <li><b>Share on:</b>
-              <div className="flex gap-2 mt-2">
-                <a href="#" className="text-blue-600"><i className="fa fa-facebook"></i></a>
-                <a href="#" className="text-blue-400"><i className="fa fa-twitter"></i></a>
-                <a href="#" className="text-pink-500"><i className="fa fa-instagram"></i></a>
-                <a href="#" className="text-red-600"><i className="fa fa-pinterest"></i></a>
-              </div>
-            </li>
-          </ul>
         </div>
       </div>
+
+      {/* Related Products Section */}
+      <div className="mt-10">
+  <h2 className="text-2xl font-bold text-center mb-6">Related Products</h2>
+  <div className="row">
+    {relatedProducts.map((related) => (
+      <div key={related.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
+        <Link href={`/detail/${related.id}`} className="text-decoration-none">
+          <div className="card h-100 shadow-sm">
+            <Image
+              src={related.image}
+              alt={related.name}
+              width={200}
+              height={150}
+              className="card-img-top p-2"
+              style={{ objectFit: "cover", height: "180px", borderRadius: "10px" }}
+            />
+            <div className="card-body text-center">
+              <h5 className="card-title">{related.name}</h5>
+              <p className="card-text text-muted">Rs: {related.price}</p>
+              <p className={`fw-semibold ${related.stock > 0 ? "text-success" : "text-danger"}`}>
+                {related.stock > 0 ? "In Stock" : "Out of Stock"}
+              </p>
+              <button className="btn btn-primary">View Details</button>
+            </div>
+          </div>
+        </Link>
+      </div>
+    ))}
+  </div>
+</div>
+
     </div>
   );
 };
